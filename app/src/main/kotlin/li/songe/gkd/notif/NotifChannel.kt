@@ -14,6 +14,12 @@ val defaultChannel by lazy {
     )
 }
 
+val actionChannel by lazy {
+    NotifChannel(
+        id = "action", name = "执行动作", desc = "执行无障碍动作"
+    )
+}
+
 val floatingChannel by lazy {
     NotifChannel(
         id = "floating", name = "悬浮窗按钮服务", desc = "用于主动捕获屏幕快照的悬浮窗按钮"
@@ -32,6 +38,7 @@ val httpChannel by lazy {
 
 fun initChannel() {
     createChannel(app, defaultChannel)
+    createChannel(app, actionChannel)
     createChannel(app, floatingChannel)
     createChannel(app, screenshotChannel)
     createChannel(app, httpChannel)

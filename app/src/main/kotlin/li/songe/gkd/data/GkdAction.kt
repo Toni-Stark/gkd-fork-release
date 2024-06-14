@@ -1,13 +1,16 @@
 package li.songe.gkd.data
 
+import android.R
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Path
 import android.graphics.Rect
 import android.view.ViewConfiguration
 import android.view.accessibility.AccessibilityNodeInfo
 import com.blankj.utilcode.util.ScreenUtils
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class GkdAction(
@@ -149,6 +152,35 @@ sealed class ActionPerformer(val action: String) {
         }
     }
 
+    data object HandleUp : ActionPerformer("handleUp") {
+        override fun perform(
+            context: AccessibilityService,
+            node: AccessibilityNodeInfo,
+            position: RawSubscription.Position?,
+            shizukuClickFc: ((x: Float, y: Float) -> Boolean?)?
+        ): ActionResult {
+            node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+            return ActionResult(
+                action = action,
+                result = node.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+            )
+        }
+    }
+    data object HandleDown : ActionPerformer("handleDown") {
+        override fun perform(
+            context: AccessibilityService,
+            node: AccessibilityNodeInfo,
+            position: RawSubscription.Position?,
+            shizukuClickFc: ((x: Float, y: Float) -> Boolean?)?
+        ): ActionResult {
+            node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+            return ActionResult(
+                action = action,
+                result = node.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)
+            )
+        }
+    }
+
     data object LongClick : ActionPerformer("longClick") {
         override fun perform(
             context: AccessibilityService,
@@ -182,7 +214,7 @@ sealed class ActionPerformer(val action: String) {
 
     companion object {
         private val allSubObjects by lazy {
-            arrayOf(ClickNode, ClickCenter, Click, LongClickNode, LongClickCenter, LongClick, Back)
+            arrayOf(ClickNode, ClickCenter, Click, LongClickNode, LongClickCenter, LongClick, HandleUp, HandleDown, Back)
         }
 
         fun getAction(action: String?): ActionPerformer {

@@ -20,6 +20,14 @@ val abNotif by lazy {
         autoCancel = false,
     )
 }
+val actionNotif by lazy {
+    Notif(
+        id = 104,
+        text = "动作服务正在运行",
+        ongoing = true,
+        autoCancel = false,
+    )
+}
 
 val screenshotNotif by lazy {
     Notif(
